@@ -48,3 +48,17 @@ def add_item(request):
         return Response({'error': str(e)}, status=400) 
         
         """changed the return Responnse from  Response({'error': str(e)}, status=400) to Return({'error}': str(e)})"""
+
+""" checking if a product is in the cart """
+
+@api_view(['GET'])
+def product_in_cart(request):
+    cart_code = request.query_params.get('cart_code')
+    product_id = request.query_params.get('product_id')
+
+    cart = Cart.objects.get(cart_code=cart_code)
+    product = Product.objects.get(id=product_id)
+
+    product_exists_in_cart = CartItem.objects.filter(cart=cart, product=product).exists()
+
+    return Response({'products_in_cart': product_exists_in_cart})
